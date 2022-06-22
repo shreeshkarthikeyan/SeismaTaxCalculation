@@ -26,7 +26,7 @@ public class TaxCalculateController {
 	LoadDataBaseService loadDataBase;
 
 	@RequestMapping(value = "/taxCalculate" , method = RequestMethod.GET)
-	public String showLoginPage() {
+	public String showTaxCalculate() {
 		
 		loadDataBase.fetchAllDBContents();
 		return "taxCalculate";
@@ -34,7 +34,7 @@ public class TaxCalculateController {
 	}
 	
 	@RequestMapping(value = "/taxCalculate" , method = RequestMethod.POST)
-	public String showResponse(@RequestParam String firstName,@RequestParam String lastName, 
+	public String showTaxCalculateWithResponse(@RequestParam String firstName,@RequestParam String lastName, 
 			@RequestParam int month, @RequestParam double annualIncome, @RequestParam int superAnnuation,
 			ModelMap model) {
 		
