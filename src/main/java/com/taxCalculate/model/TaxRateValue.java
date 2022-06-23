@@ -85,23 +85,27 @@ public class TaxRateValue {
 		
 		List<TaxRateValue> taxValues = new ArrayList<TaxRateValue>();
 		BigDecimal tax = BigDecimal.ZERO;
-		
-		for(TaxRateValue taxRateValue: LoadDataBaseService.dbContents) {
-			int result = annualIncome.compareTo(taxRateValue.getFromAmount());
-			if(result == 1) {
-				taxValues.add(taxRateValue);
+		try {
+			for(TaxRateValue taxRateValue: LoadDataBaseService.dbContents) {
+				int result = annualIncome.compareTo(taxRateValue.getFromAmount());
+				if(result == 1) {
+					taxValues.add(taxRateValue);
+				}
+			}
+			
+			//Fetching the right the TaxRateValue for calculating the Income tax.
+			TaxRateValue taxValue = taxValues.get(taxValues.size() - 1);
+			
+			if(taxValue.getTaxIsApplicable() != BigDecimal.ZERO) {
+				tax = (((annualIncome.subtract(taxValue.getTaxExemptionReductionValue()))
+						.multiply(taxValue.getTaxExemptionRate()))
+						.add(taxValue.getTaxExemptionAddValue()))
+						.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
+				//System.out.println(tax);
 			}
 		}
-		
-		//Fetching the right the TaxRateValue for calculating the Income tax.
-		TaxRateValue taxValue = taxValues.get(taxValues.size() - 1);
-		
-		if(taxValue.getTaxIsApplicable() != BigDecimal.ZERO) {
-			tax = (((annualIncome.subtract(taxValue.getTaxExemptionReductionValue()))
-					.multiply(taxValue.getTaxExemptionRate()))
-					.add(taxValue.getTaxExemptionAddValue()))
-					.divide(BigDecimal.valueOf(12), 0, RoundingMode.HALF_UP);
-			//System.out.println(tax);
+		catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 		}
 		return tax;
 	}
