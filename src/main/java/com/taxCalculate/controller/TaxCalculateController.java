@@ -28,7 +28,9 @@ public class TaxCalculateController {
 	@RequestMapping(value = "/taxCalculate" , method = RequestMethod.GET)
 	public String showTaxCalculate() {
 		
-		loadDataBase.fetchAllDBContents();
+		if(LoadDataBaseService.dbContents.size() == 0) {
+			loadDataBase.fetchAllDBContents();
+		}
 		return "taxCalculate";
 		
 	}
